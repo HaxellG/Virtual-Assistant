@@ -1,9 +1,9 @@
-Descripción:
+# Descripción:
 Este código en Python define un asistente de voz llamado "Sara". Este asistente puede realizar una variedad de tareas, 
 incluyendo reconocimiento de voz, habla, búsqueda en Wikipedia, contar chistes, abrir sitios web, reproducir videos en 
 YouTube e interactuar de manera conversacional utilizando la biblioteca de Python Chatterbot.
 
-Dependencias:
+# Dependencias:
 Se necesitan las siguientes bibliotecas de Python para ejecutar este código:
 
 speech_recognition,
@@ -19,7 +19,7 @@ time,
 chatterbot,
 tu database personalizada (esta versión tiene una creada en SQLite)
 
-Uso:
+# Uso:
 Este código escucha continuamente los comandos de voz del usuario y realiza acciones basadas en estos comandos. 
 Aquí están los comandos que entiende:
 
@@ -34,8 +34,8 @@ Aquí están los comandos que entiende:
 "netflix" y "whatsapp" (ten en cuenta que puedes añadir cualquier otro que desees).
 "desconectar" - Sara se apaga.
 
-Ten en cuenta que Sara solo responde a los comandos cuando escucha su nombre mencionado en el comando. Además, 
+Ten en cuenta que el asistente solo responde a los comandos cuando escucha su nombre mencionado en el comando. Además, 
 esta versión del asistente virtual solo entiende comandos en español.
 
-Por favor, reemplaza el módulo database con tu propio módulo que defina una función get_questions_answers(). 
+Recuerda reemplazar el módulo database con tu propio módulo que defina una función get_questions_answers(). 
 Esta función debería devolver una lista de pares de preguntas y respuestas utilizadas para entrenar el Chatterbot.
