@@ -17,7 +17,7 @@ webbrowser,
 automatic,
 time,
 chatterbot,
-tu database personalizada (esta versión tiene una creada en SQLite,
+tu database personalizada (esta versión tiene una creada en SQLite)
 
 Uso:
 Este código escucha continuamente los comandos de voz del usuario y realiza acciones basadas en estos comandos. 
