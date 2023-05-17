@@ -6,18 +6,18 @@ YouTube e interactuar de manera conversacional utilizando la biblioteca de Pytho
 Dependencias:
 Se necesitan las siguientes bibliotecas de Python para ejecutar este código:
 
-speech_recognition
-pyttsx3
-pywhatkit
-datetime
-wikipedia
-pyjokes
-json
-webbrowser
-automatic
-time
-chatterbot
-tu módulo personalizado database
+speech_recognition,
+pyttsx3,
+pywhatkit,
+datetime,
+wikipedia,
+pyjokes,
+json,
+webbrowser,
+automatic,
+time,
+chatterbot,
+tu database personalizada (esta versión tiene una creada en SQLite,
 
 Uso:
 Este código escucha continuamente los comandos de voz del usuario y realiza acciones basadas en estos comandos. 
