@@ -150,18 +150,12 @@ while True:
             elif "google" in rec:
                 speak("Abriendo la página de Google")
                 webbrowser.open("https://www.google.com/")
-            elif "universidad" in rec:
-                speak("Abriendo tu página de cursos de Uninorte")
-                webbrowser.open("https://cursos.uninorte.edu.co/d2l/home")
             elif "netflix" in rec:
                 speak("Abriendo la página de Netflix")
                 webbrowser.open("https://www.netflix.com/co/")
             elif "whatsapp" in rec:
                 speak("Abriendo whatsapp web")
                 webbrowser.open("https://web.whatsapp.com/")
-            elif "chat" in rec:
-                speak("Abriendo chat gpt")
-                webbrowser.open("https://chat.openai.com/chat")
                 
         elif 'desconectar' in rec:
             speak("Fue un gusto estar contigo, espero haber sido de ayuda")
