@@ -1,9 +1,9 @@
-Descripción
+Descripción:
 Este código en Python define un asistente de voz llamado "Sara". Este asistente puede realizar una variedad de tareas, 
 incluyendo reconocimiento de voz, habla, búsqueda en Wikipedia, contar chistes, abrir sitios web, reproducir videos en 
 YouTube e interactuar de manera conversacional utilizando la biblioteca de Python Chatterbot.
 
-Dependencias
+Dependencias:
 Se necesitan las siguientes bibliotecas de Python para ejecutar este código:
 
 speech_recognition
@@ -19,7 +19,7 @@ time
 chatterbot
 tu módulo personalizado database
 
-Uso
+Uso:
 Este código escucha continuamente los comandos de voz del usuario y realiza acciones basadas en estos comandos. 
 Aquí están los comandos que entiende:
 
