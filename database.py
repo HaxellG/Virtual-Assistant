@@ -10,9 +10,9 @@ def get_table():
     cursor.execute("SELECT * FROM question_answers")
     return cursor.fetchall()
 
-bot_list = list()
 def get_questions_answers():
     rows = get_table()
+    bot_list = []
     for row in rows:
         bot_list.extend(list(row))
     return bot_list

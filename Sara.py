@@ -1,169 +1,60 @@
-import speech_recognition as sr
-import pyttsx3
+from combined_assistant import CombinedAssistant
+from utils import read_file
+import automatic
+from datetime import datetime
 import pywhatkit
-from datetime import datetime, date, timedelta
 import wikipedia
 import pyjokes
-import json
-import webbrowser
-import automatic
-from time import time
-from chatterbot import ChatBot
-from chatterbot.trainers import ListTrainer
-import database
+import pyttsx3
 
-start_time = time()
-voice = pyttsx3.init()
+class Sara:
+    def __init__(self):
+        CONFIG_PARAMS = read_file("config", "yaml")
 
-name = "sara"
-attemts = 0
-greeting = 0
+        model = CONFIG_PARAMS["stt"]["model_size"]
+        record_timeout = CONFIG_PARAMS["stt"]["recording_time"]
+        phrase_timeout = CONFIG_PARAMS["stt"]["silence_break"]
+        energy_threshold = CONFIG_PARAMS["stt"]["sensibility"]
+        wake_word = CONFIG_PARAMS["asistente"]["wake_word"]
 
-blue_color = "\033[1;34;40m"
-cian_color = "\033[1;36;40m"
-green_color = "\033[1;32;40m"
-yellow_color = "\033[1;33;40m"
-normal_color = "\033[0;37;40m"
+        self.ca = CombinedAssistant(model, record_timeout, phrase_timeout, energy_threshold, wake_word)
+        self.voice = pyttsx3.init()
+        self.voice.setProperty('rate', 178)
+        self.voice.setProperty('volume', 1.0)
 
-voices = voice.getProperty('voices')
-voice.setProperty('voice', voices[0].id)
-voice.setProperty('rate', 178)
-voice.setProperty('volume', 1.0)
+    def process_command(self, command):
+        command = command.lower()
+        if 'play' in command:
+            song = command.replace('play', '')
+            self.ca.tts('Playing ' + song)
+            pywhatkit.playonyt(song)
 
-contacts = dict()
+        elif 'time' in command:
+            time = datetime.now().strftime('%I:%M %p')
+            self.ca.tts('Current time is ' + time)
 
-def speak(text):
-    voice.say(text)
-    voice.runAndWait()
+        elif 'wikipedia' in command:
+            info = command.replace('wikipedia', '')
+            result = wikipedia.summary(info, 1)
+            print(result)
+            self.ca.tts(result)
 
+        elif 'joke' in command:
+            self.ca.tts(pyjokes.get_joke())
 
-def get_audio():
-    r = sr.Recognizer()
-    status = False
-
-    with sr.Microphone() as source:
-        print(f"{yellow_color}({attemts}) Escuchando...{normal_color}")
-        r.adjust_for_ambient_noise(source, duration=1)
-        audio = r.listen(source)
-        rec = ""
-        try:
-            rec = r.recognize_google(audio, language='es-ES').lower()           
-            if name in rec:
-                status = True
-            else:
-                print(f"No logré comprender, repite por favor: {rec}")
-
-        except:
-            pass
-    return {'text':rec, 'status':status}
-
-def listen():
-    listener = sr.Recognizer()    
-    with sr.Microphone() as source:            
-        listener.adjust_for_ambient_noise(source)
-        print(f"{green_color}Escuchando(C)...{normal_color}")
-        pc = listener.listen(source)
-    try:
-        rec = listener.recognize_google(pc, language="es")
-        rec = rec.lower()
-    except sr.UnknownValueError:
-        print("No te entendí, intenta de nuevo")
-    except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
-    return rec
-
-
-def conversar():
-    chat = ChatBot("sara", database_uri=None)
-    trainer = ListTrainer(chat)
-    trainer.train(database.get_questions_answers())
-    speak("Muy bien, vamos a conversar")
-    while True:
-        try:
-            request = listen()
-        except UnboundLocalError:
-            continue
-        
-        print(f"{blue_color}Tú: {normal_color}({request})")
-        answer = chat.get_response(request)
-        print(f"{cian_color}Sara: {normal_color}({answer})")
-        speak(answer)
-
-        if "sara te presento" in request:
-            request = request.replace("sara te presento a", "")
-            speak("mucho gusto " + request + ", es un placer conocerte")
-
-        if "desconectar" in request:
-            speak("fue un placer conversar contigo. hora de volver a las tareas habituales")
-            break
-
-
-while True:
-    rec_json = get_audio()
-    rec = rec_json['text']
-    status = rec_json['status']
-
-    if (greeting == 0):
-        speak("Estoy lista para las actividades del día de hoy")
-        greeting = 1
-
-    if status:
-        if "hablar" in rec:
-            conversar()
-
-        if "me escuchas" in rec:
-            speak("Por supuesto, aquí estoy")
-
-        elif "reproduce" in rec:
-            video = rec.replace("sara reproduce", " ")
-            speak("reproduciendo" + video)
-            pywhatkit.playonyt(video)
-
-        elif "hora" in rec:
-            speak("Déjame consultar")
-            hour = datetime.now().strftime('%I:%M %p')
-            speak(f"Son las {hour}")
-
-        elif 'busca' in rec:
-            speak("Consultando")
-            order = rec.replace('sara busca', '')
-            wikipedia.set_lang("es")
-            info = wikipedia.summary(order, 1)
-            speak(info)
-
-        elif 'chiste' in rec:
-            chiste = pyjokes.get_joke("es")
-            speak("Muy bien, aquí va ")
-            speak(chiste)
-        
-        elif "repite" in rec:
-            repeat = rec.replace("sara repite", " ")
-            speak(repeat)
-            
-        elif "abre" in rec:
-            if "youtube" in rec:
-                speak("Abriendo la página de Youtube")
-                webbrowser.open("https://www.youtube.com/")     
-            elif "mercadolibre" in rec:
-                speak("Abriendo la página de mercadolibre")
-                webbrowser.open("https://www.mercadolibre.com.co/")
-            elif "google" in rec:
-                speak("Abriendo la página de Google")
-                webbrowser.open("https://www.google.com/")
-            elif "netflix" in rec:
-                speak("Abriendo la página de Netflix")
-                webbrowser.open("https://www.netflix.com/co/")
-            elif "whatsapp" in rec:
-                speak("Abriendo whatsapp web")
-                webbrowser.open("https://web.whatsapp.com/")
-                
-        elif 'desconectar' in rec:
-            speak("Fue un gusto estar contigo, espero haber sido de ayuda")
-            break
+        elif 'message' in command:
+            info = command.replace('message', '').split(' ')
+            contact = info[0]
+            message = ' '.join(info[1:])
+            automatic.send_message(contact, message)
 
         else:
-            print(f"No logré comprender, repite por favor: {rec}")
-            speak("No logré comprender, repite por favor")
-        attemts = 0
-    else:
-        attemts += 1
+            result = self.ca.chat.get_response(command)
+            self.ca.tts(str(result))
+
+    def listen(self):
+        self.ca.listen()
+
+if __name__ == "__main__":
+    sara = Sara()
+    sara.listen()
