@@ -1,9 +1,9 @@
 <a name="readme-top"></a>
 [![Contributors](https://shields.io/badge/Contributors-2-green)](https://github.com/HaxellG/Virtual-Assistant/graphs/contributors)
-[![Forks](https://img.shields.io/github/forks/oardilac/ChatGPT-3.5-Django-React)](https://github.com/HaxellG/Virtual-Assistant/network/members)
-[![Stargazers](https://img.shields.io/github/stars/oardilac/ChatGPT-3.5-Django-React)](https://github.com/HaxellG/Virtual-Assistant/stargazers)
-[![Issues](https://img.shields.io/github/issues/oardilac/ChatGPT-3.5-Django-React)](https://github.com/HaxellG/Virtual-Assistant/issues)
-[![MIT License](https://img.shields.io/github/license/oardilac/ChatGPT-3.5-Django-React)](https://github.com/HaxellG/Virtual-Assistant/blob/main/LICENSE)
+[![Forks](https://img.shields.io/github/forks/HaxellG/Virtual-Assistant)](https://github.com/HaxellG/Virtual-Assistant/network/members)
+[![Stargazers](https://img.shields.io/github/stars/HaxellG/Virtual-Assistant)](https://github.com/HaxellG/Virtual-Assistant/stargazers)
+[![Issues](https://img.shields.io/github/issues/HaxellG/Virtual-Assistant)](https://github.com/HaxellG/Virtual-Assistant/issues)
+[![MIT License](https://img.shields.io/github/license/HaxellG/Virtual-Assistant)](https://github.com/HaxellG/Virtual-Assistant/blob/main/LICENSE)
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555)](https://www.linkedin.com/in/oardilac/)
 <br />
 <div align="center">
