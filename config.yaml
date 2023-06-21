@@ -1,0 +1,7 @@
+stt:
+  model_size: 'base'
+  recording_time: 5
+  silence_break: 2
+  sensibility: 4000
+asistente:
+  wake_word: 'hello'

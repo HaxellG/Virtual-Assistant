@@ -1,0 +1,14 @@
+wheel
+openai-whisper
+SpeechRecognition
+openai
+gtts
+pygame
+pywhatkit   
+wikipedia
+pyjokes
+pyttsx3
+pyautogui
+python-decouple
+pyyaml
+pyaudio
