@@ -155,6 +155,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Contact
 
 Oliver Ardila - @oardilac
+
 Haxell Gomez - @HaxellG
 
 Project Link: [https://github.com/HaxellG/Virtual-Assistant](https://github.com/HaxellG/Virtual-Assistant)
