@@ -1,7 +1,7 @@
-from utils import manage_files
+from utils.manage_files import read_file
 from combined_assistant import CombinedAssistant
 
-CONFIG_PARAMS = manage_files("config", "yaml")
+CONFIG_PARAMS = read_file("config", "yaml")
 
 def main():
     model = CONFIG_PARAMS["stt"]["model_size"]

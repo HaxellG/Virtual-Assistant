@@ -32,15 +32,14 @@ def write_file(data, filename, filetype):
         filename (str): The name of the file
         filetype (str): The extension of the file
     """
-
     try:
         with open("{}.{}".format(filename, filetype), "a") as file:
-            if isinstance(data, (list, dict)) and filetype.lower() in ["yaml", "json"]:
+            if isinstance(data, str):
+                file.write(data + '\n')  # append a new line after each data
+            elif isinstance(data, (list, dict)) and filetype.lower() in ["yaml", "json"]:
                 if filetype.lower() == "yaml":
                     yaml.dump(data, file)
                 else:  # json
                     json.dump(data, file, indent=4)
-            else:
-                file.write(str(data))
     except Exception as e:
         print(f"Error occurred while writing to the file: {e}")

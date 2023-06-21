@@ -4,10 +4,11 @@ SpeechRecognition
 openai
 gtts
 pygame
-pywhatkit
+pywhatkit   
 wikipedia
 pyjokes
 pyttsx3
 pyautogui
 python-decouple
 pyyaml
+pyaudio

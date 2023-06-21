@@ -26,6 +26,7 @@ openai.api_key = config('OPENAI_API_KEY')
 
 class CombinedAssistant:
     def __init__(self, model, record_timeout, phrase_timeout, energy_threshold, wake_word):
+        self.has_started_transcribing = 0
         self.temp_file = NamedTemporaryFile().name
         self.transcription = ['']
         self.audio_model = whisper.load_model(model)
@@ -104,8 +105,6 @@ class CombinedAssistant:
                         mensaje = "Human: " + mensaje
                         respuesta = self.call_gpt(mensaje)
                         print(respuesta)
-                        self.tts(respuesta)
-                        self.play_audio_pygame("audio.mp3")
 
                         # Do something with the recognized phrase
                         self.process_command(mensaje)
@@ -118,7 +117,7 @@ class CombinedAssistant:
 
     def call_gpt(self, message):
         response = openai.ChatCompletion.create(
-            model="gpt-4.0-turbo",
+            model="gpt-3.5-turbo",
             messages=[
                 {
                     "role": "system",
@@ -135,7 +134,6 @@ class CombinedAssistant:
     def tts(self, text):
         # Convert text to speech
         tts = gtts.gTTS(text, lang='en')
-        tts.save("audio.mp3")
 
     def play_audio_pygame(self, filename):
         # Play the audio file
@@ -144,8 +142,11 @@ class CombinedAssistant:
         pygame.mixer.music.play()
 
     def write_transcript(self):
-        # Write the transcript to a file
-        wf(self.transcription, "transcript.txt")
+        if not self.has_started_transcribing:
+            self.has_started_transcribing = True
+        conversation = "\n".join(self.transcription)
+        wf(conversation, "transcript", "txt")
+
 
     def process_command(self, command):
         command = command.lower()
