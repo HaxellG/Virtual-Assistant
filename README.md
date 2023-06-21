@@ -101,8 +101,10 @@ To get a local copy up and running, follow these steps:
     pip install -r requirements.txt
     ```
 
-3. Please replace the database module with your own module that defines a get_questions_answers() function. This function should return a list of question and answer pairs used to train the Chatterbot.
-
+3. Run the code
+   ```
+   python main.py
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -156,12 +158,5 @@ Oliver Ardila - @oardilac
 Haxell Gomez - @HaxellG
 
 Project Link: [https://github.com/HaxellG/Virtual-Assistant](https://github.com/HaxellG/Virtual-Assistant)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* [Django](https://github.com/openai/gpt-3) - For providing the conversation AI capabilities.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
