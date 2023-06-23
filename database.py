@@ -11,6 +11,12 @@ def get_table():
     return cursor.fetchall()
 
 def get_questions_answers():
+    """
+    Fetch all rows from the question_answers table in the database, and return them as a list.
+    
+    Returns:
+    list: a list of rows in the question_answers table
+    """
     rows = get_table()
     bot_list = []
     for row in rows:

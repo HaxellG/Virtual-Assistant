@@ -4,14 +4,12 @@ import json
 def read_file(filename, filetype):
     """
     Function to read various types of files.
-
     Parameters:
         filename (str): The name of the file to read
         filetype (str): The extension of the file
     """
-    
     try:
-        with open("{}.{}".format(filename, filetype), "r") as file:
+        with open(f"{filename}.{filetype}", "r") as file:
             if filetype.lower() == "yaml":
                 return yaml.safe_load(file)
             elif filetype.lower() == "json":
@@ -26,14 +24,13 @@ def read_file(filename, filetype):
 def write_file(data, filename, filetype):
     """
     Function to write data to a file.
-
     Parameters:
         data (str/list/dict): Data to write
         filename (str): The name of the file
         filetype (str): The extension of the file
     """
     try:
-        with open("{}.{}".format(filename, filetype), "a") as file:
+        with open(f"{filename}.{filetype}", "a") as file:
             if isinstance(data, str):
                 file.write(data + '\n')  # append a new line after each data
             elif isinstance(data, (list, dict)) and filetype.lower() in ["yaml", "json"]:

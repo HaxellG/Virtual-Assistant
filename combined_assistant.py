@@ -20,14 +20,44 @@ from database import get_questions_answers
 from decouple import config
 import automatic
 import pyttsx3
+import threading
+from utils.logger import setup_logger
+import sys
+from typing import Any
+import tempfile
+import numpy as np
 
-# Do not forget to update the OpenAI API Key
+# setup logger
+logger = setup_logger('assistant_logger', 'assistant.log', fmt='%(asctime)s: [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+# Set OpenAI API Key
 openai.api_key = config('OPENAI_API_KEY')
+global_assistant = None  # Global variable
+
+def validate_key():
+    if not openai.api_key:
+        raise ValueError("The OPENAI_API_KEY is not set. Please provide the API key.")
+    else:
+        print("OpenAI API key is set.")
+
 
 class CombinedAssistant:
     def __init__(self, model, record_timeout, phrase_timeout, energy_threshold, wake_word):
+        """
+        Initialize the CombinedAssistant with the provided parameters.
+        
+        Parameters:
+        model (str): the name of the model to use
+        record_timeout (int): the maximum duration of a recording in seconds
+        phrase_timeout (int): the maximum pause between phrases in seconds
+        energy_threshold (int): the energy level threshold for the recognizer
+        wake_word (str): the word that wakes up the assistant
+        """
+        validate_key()
+        global global_assistant  # Use the global variable
+        global_assistant = self
         self.has_started_transcribing = 0
-        self.temp_file = NamedTemporaryFile().name
+        self.temp_file = io.BytesIO()
         self.transcription = ['']
         self.audio_model = whisper.load_model(model)
         self.phrase_time = None
@@ -39,16 +69,30 @@ class CombinedAssistant:
         self.record_timeout = record_timeout
         self.phrase_timeout = phrase_timeout
         self.wake_word = wake_word
+        self.stop_listening = False
 
-        # Set up Sara's configurations
-        self.voice = pyttsx3.init()
-        self.voice.setProperty('rate', 178)
-        self.voice.setProperty('volume', 1.0)
-        self.attemts = 0
+    @staticmethod
+    def handle_signal(sig: int, frame: Any) -> None:
+        """
+        Handle incoming SIGINT or SIGTERM signals and stop the CombinedAssistant instance gracefully.
+        
+        Parameters:
+        sig (int): the incoming signal's identifier
+        frame (Any): current stack frame
+        """
+        print('Signal received. Shutting down...')
+        global_assistant.stop()  # Stop the CombinedAssistant instance
+        sys.exit(0)
 
+    def stop(self) -> None:
+        """
+        Clean up any resources before stopping the assistant.
+        """
+        print('Cleaning up resources...')
+        self.stop_listening = True  # Stop the listen loop
+    
     def speak(self, text):
-        self.voice.say(text)
-        self.voice.runAndWait()
+        print(text)
 
     def listen(self):
         self.source = sr.Microphone(sample_rate=16000)
@@ -64,13 +108,13 @@ class CombinedAssistant:
                 data = audio.get_raw_data(convert_rate=16000, convert_width=2)
                 self.data_queue.put(data)
 
-        #Microphone is left listening with the help of speech_recognition
+        # Microphone is left listening with the help of speech_recognition
         self.recorder.listen_in_background(self.source, record_callback, phrase_time_limit=self.record_timeout)
         start = datetime.utcnow()
         while True:
             try:
                 now = datetime.utcnow()
-                if ((now - start).total_seconds()%18) == 0:
+                if ((now - start).total_seconds() % 18) == 0:
                     self.write_transcript()
                 # Pull raw recorded audio from the queue.
                 if not self.data_queue.empty():
@@ -87,11 +131,22 @@ class CombinedAssistant:
 
                     audio_data = sr.AudioData(self.last_sample, self.source.SAMPLE_RATE, self.source.SAMPLE_WIDTH)
                     wav_data = io.BytesIO(audio_data.get_wav_data())
-
-                    with open(self.temp_file, 'w+b') as f:
-                        f.write(wav_data.read())
-
-                    result = self.audio_model.transcribe(self.temp_file, language='en')
+                    
+                    # Save as a WAV file using a temporary file
+                    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+                        temp_file.write(wav_data.read())
+                        temp_file_path = temp_file.name
+                    
+                    # Load back the saved audio file as a numpy array
+                    sr_audiofile = sr.AudioFile(temp_file_path)
+                    with sr_audiofile as source:
+                        audio = self.recorder.record(source)
+                        numpy_audio_data = np.frombuffer(audio.frame_data, dtype=np.int16)
+                    
+                    # Convert numpy_audio_data to float32
+                    numpy_audio_data = numpy_audio_data.astype(np.float32)
+                    
+                    result = self.audio_model.transcribe(numpy_audio_data, language='en')
                     text = result['text'].strip()
 
                     if phrase_complete:
@@ -99,17 +154,17 @@ class CombinedAssistant:
                     else:
                         self.transcription[-1] = text
                     
-                    if self.wake_word in self.transcription[-1].lower():
-                        # The wizard is activated
-                        mensaje = self.transcription[-1].lower().replace(self.wake_word, "")
-                        mensaje = "Human: " + mensaje
-                        respuesta = self.call_gpt(mensaje)
-                        print(respuesta)
+                    # The wizard is activated
+                    mensaje = self.transcription[-1].lower()
+                    mensaje = "Human: " + mensaje
+                    respuesta = self.call_gpt(mensaje)
+                    print(respuesta)
 
-                        # Do something with the recognized phrase
-                        self.process_command(mensaje)
+                    # Do something with the recognized phrase
+                    self.process_command(mensaje)
             except Exception as e:
                 print(f"Error occurred: {e}")
+
 
     def chat(self, message):
         response = self.call_gpt(f"Human: {message}")
@@ -129,7 +184,9 @@ class CombinedAssistant:
                 }
             ]
         )
-        return response['choices'][0]['message']['content']
+        respuesta = response['choices'][0]['message']['content']
+        return respuesta
+
 
     def tts(self, text):
         # Convert text to speech
@@ -146,38 +203,15 @@ class CombinedAssistant:
             self.has_started_transcribing = True
         conversation = "\n".join(self.transcription)
         wf(conversation, "transcript", "txt")
-
-
+    
     def process_command(self, command):
-        command = command.lower()
-        print(command)
-        if 'play' in command:
-            song = command.replace('play', '')
-            self.tts('Playing ' + song)
-            pywhatkit.playonyt(song)
+        """
+        Process the given command (for now, just print it).
 
-        elif 'time' in command:
-            time = datetime.now().strftime('%I:%M %p')
-            self.tts('Current time is ' + time)
-
-        elif 'wikipedia' in command:
-            info = command.replace('wikipedia', '')
-            result = wikipedia.summary(info, 1)
-            print(result)
-            self.tts(result)
-
-        elif 'joke' in command:
-            self.tts(pyjokes.get_joke())
-
-        elif 'message' in command:
-            info = command.replace('message', '').split(' ')
-            contact = info[0]
-            message = ' '.join(info[1:])
-            automatic.send_message(contact, message)
-
-        else:
-            result = self.chat(command)
-            self.tts(str(result))
+        Parameters:
+        command (str): the command to process
+        """
+        print(f"Processing command: {command}")
 
 if __name__ == '__main__':
     assistant = CombinedAssistant('whisper_model', 5, 2, 4000, 'hey assistant')
