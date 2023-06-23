@@ -108,26 +108,6 @@ To get a local copy up and running, follow these steps:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
-## Usage
-
-This code continuously listens to the user's voice commands and performs actions based on these commands. Here are the commands it understands:
-
-* "talk" - ChatGPT enters a conversational mode and chats with the user.
-* "can you hear me" - ChatGPT confirms if it can hear the user.
-* "play" - ChatGPT plays a video on YouTube. The video to play must be specified after the "play" command.
-* "time" - ChatGPT tells the current time.
-* "search" - ChatGPT searches for a term on Wikipedia. The term to search must be specified after the "search" command.
-* "joke" - ChatGPT tells a joke.
-* "repeat" - ChatGPT repeats what the user says after the "repeat" command.
-* "open" - ChatGPT opens certain websites. Compatible websites are "youtube", "mercadolibre", "google", "netflix", and "whatsapp" (note that you can add any other websites you wish).
-* "disconnect" - ChatGPT turns off.
-
-Please note that the assistant only responds to commands when it hears its wake word mentioned in the command.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 <!-- CONTRIBUTING -->
 ## Contributing
 
