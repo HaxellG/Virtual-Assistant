@@ -56,7 +56,7 @@ A Virtual Assistant with Speech Recognition using Python.
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project includes the source code for "Sara", a voice assistant. This voice assistant can perform a variety of tasks, including voice recognition, speech, Wikipedia search, joke telling, opening websites, playing YouTube videos, and conversational interaction using GPT model.
+This project includes the source code for a voice assistant powered by OpenAI's ChatGPT model. This voice assistant can perform a variety of tasks, including voice recognition, speech, Wikipedia search, joke telling, opening websites, playing YouTube videos, and conversational interaction using the GPT model.
 
 ### Why this project?
 * Automate repetitive tasks by using voice commands, thereby improving efficiency and productivity.
@@ -78,7 +78,7 @@ This project's backend has been built using the following major frameworks:
 * Pyjokes
 * JSON
 * Webbrowser
-* OpenAI
+* OpenAI's ChatGPT
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -107,26 +107,6 @@ To get a local copy up and running, follow these steps:
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-This code continuously listens to the user's voice commands and performs actions based on these commands. Here are the commands it understands:
-
-* "talk" - Sara enters a conversational mode and chats with the user.
-* "can you hear me" - Sara confirms if she can hear the user.
-* "play" - Sara plays a video on YouTube. The video to play must be specified after the "play" command.
-* "time" - Sara tells the current time.
-* "search" - Sara searches for a term on Wikipedia. The term to search must be specified after the "search" command.
-* "joke" - Sara tells a joke.
-* "repeat" - Sara repeats what the user says after the "repeat" command.
-* "open" - Sara opens certain websites. Compatible websites are "youtube", "mercadolibre", "google", "netflix", and "whatsapp" (note that you can add any other websites you wish).
-* "disconnect" - Sara turns off.
-
-Please note that the assistant only responds to commands when she hears her name mentioned in the command. 
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
